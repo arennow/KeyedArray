@@ -50,14 +50,25 @@ extension KeyedArray where Element: Identifiable, Key == Element.ID {
 	public init() {
 		self.init(keyExtractor: \.id)
 	}
+	
+	public init<S: Sequence>(_ seq: S) where S.Element == Element {
+		self.init()
+		
+		for element in seq {
+			self.append(element)
+		}
+	}
 }
 
 extension KeyedArray: ExpressibleByArrayLiteral where Element: Identifiable, Key == Element.ID {
 	public init(arrayLiteral elements: Element...) {
-		self.init()
-		
-		for element in elements {
-			self.append(element)
-		}
+		self.init(elements)
 	}
+}
+
+extension KeyedArray: Collection {
+	public var startIndex: Int { array.startIndex }
+	public var endIndex: Int { array.endIndex }
+	
+	public func index(after i: Int) -> Int { array.index(after: i) }
 }
