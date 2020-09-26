@@ -17,7 +17,8 @@ final class KeyedArrayTests: XCTestCase {
 		("testRemoveByKey", testRemoveByKey),
 		("testReplaceByIndex", testReplaceByIndex),
 		("testArrayIsArray", testArrayIsArray),
-		("testIterator", testIterator)
+		("testIterator", testIterator),
+		("testEquality", testEquality)
 	]
 	
 	var ar: KeyedArray<Character, DemoVal>!
@@ -73,5 +74,14 @@ final class KeyedArrayTests: XCTestCase {
 		XCTAssertEqual(it.next(), "alpha")
 		XCTAssertEqual(it.next(), "beta")
 		XCTAssertEqual(it.next(), nil)
+	}
+	
+	func testEquality() {
+		var other = ar!
+		
+		XCTAssertEqual(ar, other)
+		
+		other.insert("charlie", at: 1)
+		XCTAssertNotEqual(ar, other)
 	}
 }

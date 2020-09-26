@@ -72,3 +72,9 @@ extension KeyedArray: Collection {
 	
 	public func index(after i: Int) -> Int { array.index(after: i) }
 }
+
+extension KeyedArray: Equatable {
+	public static func ==(lhs: KeyedArray<Key, Element>, rhs: KeyedArray<Key, Element>) -> Bool {
+		lhs.array == rhs.array
+	}
+}
