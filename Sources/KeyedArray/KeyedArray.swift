@@ -8,6 +8,14 @@ public struct KeyedArray<Key: Hashable, Element: Equatable> {
 		self.keyExtractor = keyExtractor
 	}
 	
+	public init<S: Sequence>(_ seq: S, keyExtractor: @escaping (Element)->Key) where S.Element == Element {
+		self.init(keyExtractor: keyExtractor)
+		
+		for element in seq {
+			self.append(element)
+		}
+	}
+	
 	public subscript(index: Int) -> Element { self.array[index] }
 	public subscript(key: Key) -> Element? { self.dictionary[key] }
 	
@@ -52,11 +60,7 @@ extension KeyedArray where Element: Identifiable, Key == Element.ID {
 	}
 	
 	public init<S: Sequence>(_ seq: S) where S.Element == Element {
-		self.init()
-		
-		for element in seq {
-			self.append(element)
-		}
+		self.init(seq, keyExtractor: \.id)
 	}
 }
 

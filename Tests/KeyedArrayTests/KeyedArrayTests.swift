@@ -10,17 +10,6 @@ final class KeyedArrayTests: XCTestCase {
 		init(stringLiteral str: String) { self.str = str }
 	}
 	
-	static var allTests = [
-		("testAppend", testAppend),
-		("testInsert", testInsert),
-		("testRemoveByIndex", testRemoveByIndex),
-		("testRemoveByKey", testRemoveByKey),
-		("testReplaceByIndex", testReplaceByIndex),
-		("testArrayIsArray", testArrayIsArray),
-		("testIterator", testIterator),
-		("testEquality", testEquality)
-	]
-	
 	var ar: KeyedArray<Character, DemoVal>!
 	
 	override func setUp() {
