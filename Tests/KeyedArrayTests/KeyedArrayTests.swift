@@ -2,9 +2,10 @@ import XCTest
 import KeyedArray
 
 final class KeyedArrayTests: XCTestCase {
-	struct DemoVal: Equatable, Identifiable, ExpressibleByStringLiteral {
+	struct DemoVal: Equatable, Identifiable, ExpressibleByStringLiteral, CustomStringConvertible {
 		let str: String
 		var id: Character { str.first! }
+		var description: String { str }
 		
 		init(_ str: String) { self.str = str }
 		init(stringLiteral str: String) { self.str = str }
@@ -47,11 +48,29 @@ final class KeyedArrayTests: XCTestCase {
 		XCTAssertEqual(ar.array, ["alpha"])
 	}
 	
-	func testReplaceByIndex() {
+	func testReplaceByAppend() {
 		ar.append("bravo")
 		
 		XCTAssertEqual(ar.array, ["alpha", "bravo"])
 		XCTAssertEqual(ar.dictionary, ["a": "alpha", "b": "bravo"])
+	}
+	
+	func testMutateValueInPlaceByKey() {
+		ar.mutateValueInPlace(for: "a") { existing in
+			existing = "alpine"
+		}
+		
+		XCTAssertEqual(ar.array, ["alpine", "beta"])
+		XCTAssertEqual(ar.dictionary, ["a": "alpine", "b": "beta"])
+	}
+	
+	func testMutateValueInPlaceByIndex() {
+		ar.mutateValueInPlace(for: 0) { existing in
+			existing = "alpine"
+		}
+		
+		XCTAssertEqual(ar.array, ["alpine", "beta"])
+		XCTAssertEqual(ar.dictionary, ["a": "alpine", "b": "beta"])
 	}
 	
 	func testArrayIsArray() {
