@@ -20,20 +20,27 @@ public struct KeyedArray<Key: Hashable, Element: Equatable> {
 	public subscript(key: Key) -> Element? { self.dictionary[key] }
 	
 	public mutating func append(_ newElement: Element) {
-		let key = self.keyExtractor(newElement)
-		
-		self.remove(by: key)
-		
-		self.array.append(newElement)
-		self.dictionary[key] = newElement
+		self.insert(newElement, at: .end)
 	}
 	
 	public mutating func insert(_ newElement: Element, at index: Int) {
+		self.insert(newElement, at: .index(index))
+	}
+	
+	private enum InsertionPoint {
+		case index(Int)
+		case end
+	}
+	
+	private mutating func insert(_ newElement: Element, at insertionPoint: InsertionPoint) {
 		let key = self.keyExtractor(newElement)
 		
 		self.remove(by: key)
 		
-		self.array.insert(newElement, at: index)
+		switch insertionPoint {
+			case .index(let index): self.array.insert(newElement, at: index)
+			case .end: self.array.append(newElement)
+		}
 		self.dictionary[key] = newElement
 	}
 	
