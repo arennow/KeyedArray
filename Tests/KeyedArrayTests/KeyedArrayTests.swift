@@ -1,7 +1,7 @@
-import XCTest
 import KeyedArray
+import Testing
 
-final class KeyedArrayTests: XCTestCase {
+struct KeyedArrayTests {
 	struct DemoVal: Equatable, Identifiable, ExpressibleByStringLiteral, CustomStringConvertible {
 		let str: String
 		var id: Character { str.first! }
@@ -13,83 +13,93 @@ final class KeyedArrayTests: XCTestCase {
 	
 	var ar: KeyedArray<Character, DemoVal>!
 	
-	override func setUp() {
+	init() {
 		self.ar = ["alpha", "beta"]
 	}
 	
-	func testAppend() {
+	@Test
+	mutating func append() {
 		ar.append("charlie")
 		
-		XCTAssertEqual(ar.array, ["alpha", "beta", "charlie"])
-		XCTAssertEqual(ar["a"], "alpha")
-		XCTAssertEqual(ar["b"], "beta")
-		XCTAssertEqual(ar["c"], "charlie")
+		#expect(ar.array == ["alpha", "beta", "charlie"])
+		#expect(ar["a"] == "alpha")
+		#expect(ar["b"] == "beta")
+		#expect(ar["c"] == "charlie")
 	}
 	
-	func testInsert() {
+	@Test
+	mutating func insert() {
 		ar.insert("charlie", at: 1)
 		
-		XCTAssertEqual(ar.array, ["alpha", "charlie", "beta"])
-		XCTAssertEqual(ar["a"], "alpha")
-		XCTAssertEqual(ar["b"], "beta")
-		XCTAssertEqual(ar["c"], "charlie")
+		#expect(ar.array == ["alpha", "charlie", "beta"])
+		#expect(ar["a"] == "alpha")
+		#expect(ar["b"] == "beta")
+		#expect(ar["c"] == "charlie")
 	}
 	
-	func testRemoveByIndex() {
+	@Test
+	mutating func removeByIndex() {
 		ar.remove(at: 1)
 		
-		XCTAssertEqual(ar.array, ["alpha"])
+		#expect(ar.array == ["alpha"])
 	}
 	
-	func testRemoveByKey() {
-		XCTAssertNil(ar.remove(by: "Q"))
+	@Test
+	mutating func removeByKey() {
+		#expect(ar.remove(by: "Q") == nil)
 		
-		XCTAssertEqual(ar.remove(by: "b"), "beta")
-		XCTAssertEqual(ar.array, ["alpha"])
+		#expect(ar.remove(by: "b") == "beta")
+		#expect(ar.array == ["alpha"])
 	}
 	
-	func testReplaceByAppend() {
+	@Test
+	mutating func replaceByAppend() {
 		ar.append("bravo")
 		
-		XCTAssertEqual(ar.array, ["alpha", "bravo"])
-		XCTAssertEqual(ar.dictionary, ["a": "alpha", "b": "bravo"])
+		#expect(ar.array == ["alpha", "bravo"])
+		#expect(ar.dictionary == ["a": "alpha", "b": "bravo"])
 	}
 	
-	func testMutateValueInPlaceByKey() {
+	@Test
+	mutating func mutateValueInPlaceByKey() {
 		ar.mutateValueInPlace(for: "a") { existing in
 			existing = "alpine"
 		}
 		
-		XCTAssertEqual(ar.array, ["alpine", "beta"])
-		XCTAssertEqual(ar.dictionary, ["a": "alpine", "b": "beta"])
+		#expect(ar.array == ["alpine", "beta"])
+		#expect(ar.dictionary == ["a": "alpine", "b": "beta"])
 	}
 	
-	func testMutateValueInPlaceByIndex() {
+	@Test
+	mutating func mutateValueInPlaceByIndex() {
 		ar.mutateValueInPlace(for: 0) { existing in
 			existing = "alpine"
 		}
 		
-		XCTAssertEqual(ar.array, ["alpine", "beta"])
-		XCTAssertEqual(ar.dictionary, ["a": "alpine", "b": "beta"])
+		#expect(ar.array == ["alpine", "beta"])
+		#expect(ar.dictionary == ["a": "alpine", "b": "beta"])
 	}
 	
-	func testArrayIsArray() {
-		XCTAssertEqual(Array(ar.array), ar.array)
+	@Test
+	mutating func arrayIsArray() {
+		#expect(Array(ar.array) == ar.array)
 	}
 	
-	func testIterator() {
+	@Test
+	mutating func iterator() {
 		var it = ar.makeIterator()
-		XCTAssertEqual(it.next(), "alpha")
-		XCTAssertEqual(it.next(), "beta")
-		XCTAssertEqual(it.next(), nil)
+		#expect(it.next() == "alpha")
+		#expect(it.next() == "beta")
+		#expect(it.next() == nil)
 	}
 	
-	func testEquality() {
+	@Test
+	mutating func equality() {
 		var other = ar!
 		
-		XCTAssertEqual(ar, other)
+		#expect(ar == other)
 		
 		other.insert("charlie", at: 1)
-		XCTAssertNotEqual(ar, other)
+		#expect(ar != other)
 	}
 }
